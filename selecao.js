@@ -3,6 +3,12 @@ const escolhidas = new Set();
 const limite = 20;
 const painel = document.querySelector('#painel');
 const abrirResumo = document.querySelector('#abrir');
+const limparSelecao = elemento('button', 'Limpar seleção');
+abrirResumo.before(limparSelecao);
+limparSelecao.onclick = () => {
+  escolhidas.clear();
+  atualizar();
+};
 const linhas = [...document.querySelectorAll('tbody tr')];
 const nomes = linhas.map(linha => linha.cells[0].firstChild.textContent);
 const descricoes = linhas.map(linha => linha.cells[5].textContent);
@@ -43,6 +49,7 @@ function valorFormatado(valor, unidade) {
   return (valor > 0 ? '+' : '') + valor.toLocaleString('pt-BR', {maximumFractionDigits: 3}) + unidade;
 }
 function atualizar() {
+  limparSelecao.disabled = escolhidas.size === 0;
   const cheio = escolhidas.size === limite;
   document.querySelector('#contador').textContent = escolhidas.size + ' / 20 cartas' + (cheio ? ' · Limite atingido' : ' selecionadas');
   for (const [i, caixa] of seletores.entries()) {
@@ -92,4 +99,3 @@ abrirResumo.onclick = () => {
   abrirResumo.textContent = painel.hidden ? 'Ver somatório' : 'Recolher somatório';
 };
 atualizar();
-
